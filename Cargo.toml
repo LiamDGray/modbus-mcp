@@ -1,0 +1,10 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/modbus-mcp-core",
+    "crates/modbus-mcp-server",
+    "crates/modbus-mcp-cli",
+]
+
+[workspace.lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }

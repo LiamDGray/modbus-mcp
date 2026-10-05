@@ -1,0 +1,31 @@
+name: "CI / Modbus MCP 5-Tier Verification"
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rust-checks:
+    name: "Rust Lint, Format & Test Matrix"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Check Formatting
+        run: cargo fmt --all -- --check
+
+      - name: Clippy Linter
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Test Suite
+        run: cargo test --workspace
